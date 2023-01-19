@@ -4,7 +4,9 @@
 /.pytest_cache
 /__pycache__
 /tests/__pycache__
-/allure-results
+/.allure-results
+/.env
+allure-results
 
 
 

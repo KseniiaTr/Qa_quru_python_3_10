@@ -4,8 +4,8 @@ from selene import command
 import os
 
 
-def test_demoqa_hw(setup_browser):
-    browser = setup_browser
+def test_demoqa_hw(setup_chrome):
+    browser = setup_chrome
     with allure.step('Открываем страницу формы'):
         browser.open('https://demoqa.com/automation-practice-form')
 
@@ -48,5 +48,5 @@ def test_demoqa_hw(setup_browser):
     with allure.step('Проверяем заполненные данные'):
         browser.all('.table-responsive td:nth-child(2)').should(have.texts(
             'Alex Alekseev', 'alexalekseev@gmail.com', 'Male', '8910123121',
-            '07 May,1991', 'History', 'Music', 'Photo_test_yellow.png', 'Delhi, Pyatnitskaya st 12/12', 'NCR Delhi'))
-
+            '07 May,1991', 'History', 'Music', 'Photo_test_yellow.png',
+            'Delhi, Pyatnitskaya st 12/12', 'NCR Delhi'))

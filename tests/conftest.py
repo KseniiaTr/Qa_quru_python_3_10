@@ -1,26 +1,24 @@
+import os
+
 import pytest
 from selenium import webdriver
 from selene import Browser, Config
 from selenium.webdriver.chrome.options import Options
 
 from utils import attach
+from dotenv import load_dotenv
 
 
-def pytest_addoption(parser):
-    parser.addoption(
-        '--browser',
-        help='Браузер, в котором будут запущены тесты',
-        choices=['firefox', 'chrome'],
-        default='chrome'
-    )
+@pytest.fixture(scope='session', autouse=True)
+def load_env():
+    load_dotenv()
 
 
 @pytest.fixture(scope='function')
-def setup_browser(request):
-    browser_name = request.config.getoption('--browser')
+def setup_chrome():
     options = Options()
     selenoid_capabilities = {
-        "browserName": browser_name,
+        "browserName": "chrome",
         "browserVersion": "100.0",
         "selenoid:options": {
             "enableVNC": True,
@@ -29,8 +27,11 @@ def setup_browser(request):
     }
     options.capabilities.update(selenoid_capabilities)
 
+    login = os.getenv('LOGIN')
+    password = os.getenv('PASSWORD')
+
     driver = webdriver.Remote(
-        command_executor="https://user1:1234@selenoid.autotests.cloud/wd/hub",
+        command_executor=f"https://{login}:{password}@selenoid.autotests.cloud/wd/hub",
         options=options
     )
     browser = Browser(Config(driver))
@@ -41,5 +42,4 @@ def setup_browser(request):
     attach.add_logs(browser)
     attach.add_html(browser)
     attach.add_video(browser)
-
-
+    browser.quit()
